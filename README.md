@@ -1,7 +1,7 @@
-# BG_0001 a Dexcom G7 to LED Display
-Service that fetches real-time blood glucose data from your Dexcom G7 CGM and displays it on an LED matrix display (Ulanzi TC001). 
+# Dexcom G7 to LED Display (BG_0001)
+ BG_0001 is a customizable service that fetches real-time blood glucose data from your Dexcom G7 CGM and displays it on an LED matrix display using the Ulanzi TC001. 
 
-Cost for this is one-time ~$40-50 and ~1 hour of time to configure the environment (see [Hardware](#hardware-used) for links, and [Installation](#installation) for step-by-step instructions).
+Cost for this is one-time ~$40-50 (to buy the Ulanzi TC001) and ~1 hour of time to configure the environment. See [Hardware](#hardware-used) for links, and [Installation](#installation) for step-by-step instructions.
 
 Alternatively, if you would rather not do any configuration, you can pay ~$100 USD for the SugarPixel ([link](https://customtypeone.com/products/sugarpixel)), which can do this through a mobile app.
 
@@ -18,7 +18,7 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
   - [1. Clone and Set Up Environment](#1-clone-and-set-up-environment)
   - [2. Configure Environment](#2-configure-environment)
   - [3. Test Locally](#3-test-locally)
-  - [4. Test with AWTRIX3](#4-test-with-awtrix3)
+  - [4. Push to AWTRIX3](#4-test-with-awtrix3)
 - [Cloud Run Deployment](#cloud-run-deployment)
   - [1. Set Up Google Cloud](#1-set-up-google-cloud)
   - [2. Store Secrets](#2-store-secrets)
@@ -36,9 +36,9 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
 
 ## Features
 
-| | |
+| List of features | How it displays for me |
 |---|---|
-| <ul><li>**Real-time glucose display**: Shows current blood glucose value in mg/dL</li><li>**Trend arrows**: Displays direction of glucose change (↑ ↓ → ↑↑ ↓↓)</li><li>**Delta tracking**: Shows change from previous reading (e.g., "+5" or "-12")</li><li>**Color-coded alerts**:<ul><li>Red: Low (<70 mg/dL)</li><li>Green: Normal (70-180 mg/dL)</li><li>Yellow: High (181-240 mg/dL)</li><li>Orange: Very high (>240 mg/dL)</li></ul></li><li>**Progress bar**: Shows countdown to next API refresh</li><li>**Rate limiting**: Respects Dexcom API limits (max 1 call per 5 minutes)</li></ul> | How it displays for me: <img src="assets/example.jpg" alt="Example Display" width="300"> |
+| <ul><li>**Real-time glucose display**: Shows current blood glucose value in mg/dL</li><li>**Trend arrows**: Displays direction of glucose change (↑ ↓ → ↑↑ ↓↓)</li><li>**Delta tracking**: Shows change from previous reading (e.g., "+5" or "-12")</li><li>**Color-coded alerts**:<ul><li>Red: Low (<70 mg/dL)</li><li>Green: Normal (70-180 mg/dL)</li><li>Yellow: High (181-240 mg/dL)</li><li>Orange: Very high (>240 mg/dL)</li></ul></li><li>**Progress bar**: Shows countdown to next API refresh</li><li>**Rate limiting**: Respects Dexcom API limits (max 1 call per 5 minutes)</li></ul> |  <img src="assets/example.jpg" alt="Example Display" width="300"> |
 
 ## Hardware Used
 - ~$40-50 USD Ulanzi TC001 Smart Pixel Clock ([Amazon US link](https://www.amazon.com/ULANZI-TC001-Smart-Pixel-Clock/dp/B0CXX91TY5))
