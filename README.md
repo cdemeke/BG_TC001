@@ -3,7 +3,7 @@
 
 Cost for this is one-time ~$40-50 (to buy the Ulanzi TC001) and ~1 hour of time to configure the environment. See [Hardware](#hardware-used) for links, and [Installation](#installation) for step-by-step instructions.
 
-Alternatively, if you would rather not do any configuration, you can pay ~$100 USD for the SugarPixel ([link](https://customtypeone.com/products/sugarpixel)), which can do this through a mobile app.
+Alternatively, if you would rather not do any configuration, you can pay ~$100 USD for the SugarPixel (<a href="https://customtypeone.com/products/sugarpixel" target="_blank">link</a>), which can do this through a mobile app.
 
 ## Table of Contents
 
@@ -41,9 +41,9 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
 | <ul><li>**Real-time glucose display**: Shows current blood glucose value in mg/dL</li><li>**Trend arrows**: Displays direction of glucose change (↑ ↓ → ↑↑ ↓↓)</li><li>**Delta tracking**: Shows change from previous reading (e.g., "+5" or "-12")</li><li>**Color-coded alerts**:<ul><li>Red: Low (<70 mg/dL)</li><li>Green: Normal (70-180 mg/dL)</li><li>Yellow: High (181-240 mg/dL)</li><li>Orange: Very high (>240 mg/dL)</li></ul></li><li>**Progress bar**: Shows countdown to next API refresh</li><li>**Rate limiting**: Respects Dexcom API limits (max 1 call per 5 minutes)</li></ul> |  <img src="assets/example.jpg" alt="Example Display" width="300"> |
 
 ## Hardware Used
-- ~$40-50 USD Ulanzi TC001 Smart Pixel Clock ([Amazon US link](https://www.amazon.com/ULANZI-TC001-Smart-Pixel-Clock/dp/B0CXX91TY5))
-    
-    - Modded using *AWTRIX3* [instructions](https://blueforcer.github.io/awtrix3/#/).
+- ~$40-50 USD Ulanzi TC001 Smart Pixel Clock (<a href="https://www.amazon.com/ULANZI-TC001-Smart-Pixel-Clock/dp/B0CXX91TY5" target="_blank">Amazon US link</a>)
+
+    - Modded using *AWTRIX3* <a href="https://blueforcer.github.io/awtrix3/#/" target="_blank">instructions</a>.
     - When modding the Ulanzi TC001, use a high-speed USB-C data cable (took a long time to realize and fix that when I was modding it)
 
 - ~$0 Local computer or Raspberry Pi (as the bridge to send data to TC001)
@@ -397,6 +397,6 @@ MIT
 
 ## Acknowledgments
 
-Thank you to these services that enabled this: 
-- [pydexcom](https://github.com/gagebenne/pydexcom) - Dexcom Share API client
-- [AWTRIX3](https://github.com/Blueforcer/awtrix3) - LED matrix firmware
+Thank you to these services that enabled this:
+- <a href="https://github.com/gagebenne/pydexcom" target="_blank">pydexcom</a> - Dexcom Share API client
+- <a href="https://github.com/Blueforcer/awtrix3" target="_blank">AWTRIX3</a> - LED matrix firmware
