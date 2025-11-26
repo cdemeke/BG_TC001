@@ -1,10 +1,39 @@
 # BG_0001 a Dexcom G7 to LED Display
 Service that fetches real-time blood glucose data from your Dexcom G7 CGM and displays it on an LED matrix display (Ulanzi TC001). 
 
-Cost for this is one-time ~$40-50 and ~1 hour of time to configure the environment (see [Hardware](#hardware-used) for links, and [Installation](#installation) for step-by-step instructions). 
+Cost for this is one-time ~$40-50 and ~1 hour of time to configure the environment (see [Hardware](#hardware-used) for links, and [Installation](#installation) for step-by-step instructions).
 
 Alternatively, if you would rather not do any configuration, you can pay ~$100 USD for the SugarPixel ([link](https://customtypeone.com/products/sugarpixel)), which can do this through a mobile app.
- 
+
+## Table of Contents
+
+- [Features](#features)
+- [Hardware Used](#hardware-used)
+- [Display Format](#display-format)
+  - [Arrow Logic](#arrow-logic)
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Repo Structure](#repo-structure)
+- [Installation](#installation)
+  - [1. Clone and Set Up Environment](#1-clone-and-set-up-environment)
+  - [2. Configure Environment](#2-configure-environment)
+  - [3. Test Locally](#3-test-locally)
+  - [4. Test with AWTRIX3](#4-test-with-awtrix3)
+- [Cloud Run Deployment](#cloud-run-deployment)
+  - [1. Set Up Google Cloud](#1-set-up-google-cloud)
+  - [2. Store Secrets](#2-store-secrets)
+  - [3. Deploy to Cloud Run](#3-deploy-to-cloud-run)
+  - [4. Get Service URL](#4-get-service-url)
+  - [5. Configure Local Bridge](#5-configure-local-bridge)
+- [Running as a Service](#running-as-a-service)
+  - [macOS (launchd)](#macos-launchd)
+  - [Linux (systemd)](#linux-systemd)
+- [API Endpoints](#api-endpoints)
+- [Rate Limiting](#rate-limiting)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Features
 
 | | |
