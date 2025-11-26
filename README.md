@@ -397,5 +397,6 @@ MIT
 
 ## Acknowledgments
 
+Thank you to these services that enabled this: 
 - [pydexcom](https://github.com/gagebenne/pydexcom) - Dexcom Share API client
 - [AWTRIX3](https://github.com/Blueforcer/awtrix3) - LED matrix firmware
