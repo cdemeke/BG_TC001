@@ -122,15 +122,21 @@ class DexcomClient:
         try:
             dexcom = self._get_dexcom_client()
 
-            # Get last 2 readings to calculate delta
-            readings = dexcom.get_glucose_readings(minutes=15, max_count=2)
+            # Try to get last 2 readings to calculate delta
+            readings = dexcom.get_glucose_readings(minutes=30, max_count=2)
 
             if not readings:
-                logger.warning("No glucose readings returned from Dexcom")
-                with self._lock:
-                    # Still update the last call time to prevent hammering
-                    self._last_api_call = datetime.now()
-                return None, 0
+                # Fallback to get_latest_glucose_reading if get_glucose_readings returns empty
+                logger.info("get_glucose_readings returned empty, trying get_latest_glucose_reading")
+                latest = dexcom.get_latest_glucose_reading()
+                if latest:
+                    readings = [latest]
+                else:
+                    logger.warning("No glucose readings returned from Dexcom")
+                    with self._lock:
+                        # Still update the last call time to prevent hammering
+                        self._last_api_call = datetime.now()
+                    return None, 0
 
             current = readings[0]
             previous = readings[1] if len(readings) > 1 else None
