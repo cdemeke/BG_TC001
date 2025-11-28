@@ -38,7 +38,7 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
 
 | List of features | How it displays for me |
 |---|---|
-| <ul><li>**Real-time glucose display**: Shows current blood glucose value in mg/dL</li><li>**Trend arrows**: Displays direction of glucose change (↑ ↓ → ↑↑ ↓↓)</li><li>**Delta tracking**: Shows change from previous reading (e.g., "+5" or "-12")</li><li>**Color-coded alerts**:<ul><li>Red: Low (<70 mg/dL)</li><li>Green: Normal (70-180 mg/dL)</li><li>Yellow: High (181-240 mg/dL)</li><li>Orange: Very high (>240 mg/dL)</li></ul></li><li>**Progress bar**: Shows countdown to next API refresh</li><li>**Rate limiting**: Respects Dexcom API limits (max 1 call per 5 minutes)</li></ul> |  <img src="assets/example.jpg" alt="Example Display" width="300"> |
+| <ul><li>**Real-time glucose display**: Shows current blood glucose value in mg/dL</li><li>**Trend arrows**: Pixel-drawn arrows with wide tips showing rate of change:<ul><li>→ Stable (±0-5)</li><li>↗↘ Moderate (±6-15)</li><li>↑↓ Rapid (±16+)</li></ul></li><li>**Delta tracking**: Shows change from previous reading in a separate color</li><li>**Color-coded alerts** (configurable):<ul><li>Red: Low (<70 mg/dL)</li><li>Green: Normal (70-180 mg/dL)</li><li>Yellow: High (181-240 mg/dL)</li><li>Orange: Very high (>240 mg/dL)</li></ul></li><li>**Progress bar**: Shows countdown to next API refresh</li><li>**Fully configurable**: All colors and thresholds can be customized via environment variables</li></ul> |  <img src="assets/example.jpg" alt="Example Display" width="300"> |
 
 ## Hardware Used
 - ~$40-50 USD Ulanzi TC001 Smart Pixel Clock (<a href="https://www.amazon.com/ULANZI-TC001-Smart-Pixel-Clock/dp/B0CXX91TY5" target="_blank">Amazon US link</a>)
@@ -53,19 +53,24 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
 ## Display Format
 
 ```
-120→ +3
+149↘-11
 ```
 
-- `120` - Current glucose value in mg/dL
-- `→` - Trend arrow (stable, rising, falling)
-- `+3` - Change since last reading
+- `149` - Current glucose value in mg/dL
+- `↘` - Pixel-drawn trend arrow
+- `-11` - Change since last reading (in different color)
 
 ### Arrow Logic
 
 | Delta (mg/dL) | Arrow | Meaning |
 |---------------|-------|---------|
-| ±0-19 | → ↑ ↓ | Stable/gradual change |
-| ±20+ | ↑↑ ↓↓ | Rapid change |
+| ±0-5 | → | Stable |
+| ±6-15 | ↗ ↘ | Moderate change |
+| ±16+ | ↑ ↓ | Rapid change |
+
+Arrows are pixel-drawn inline between the glucose value and delta.
+
+Thresholds are configurable via `DELTA_STABLE_THRESHOLD` (default 5) and `DELTA_RAPID_THRESHOLD` (default 15).
 
 ## Architecture
 
@@ -145,6 +150,19 @@ Required environment variables:
 | `DEXCOM_USERNAME` | Yes | Dexcom account email/username |
 | `DEXCOM_PASSWORD` | Yes | Dexcom account password |
 | `DEXCOM_REGION` | No | `us` (default), `ous` (outside US), or `jp` (Japan) |
+
+Optional display customization (colors in RGB format, e.g., `255,0,0`):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DELTA_STABLE_THRESHOLD` | `5` | Delta ± this shows stable arrow (→) |
+| `DELTA_RAPID_THRESHOLD` | `15` | Delta ± beyond this shows rapid arrow (↑↓) |
+| `COLOR_NORMAL` | `0,255,0` | Green - normal range (70-180) |
+| `COLOR_LOW` | `255,0,0` | Red - low (<70) |
+| `COLOR_HIGH` | `255,255,0` | Yellow - high (181-240) |
+| `COLOR_VERY_HIGH` | `255,128,0` | Orange - very high (>240) |
+| `COLOR_DELTA` | `255,255,255` | White - delta change text |
+| `COLOR_PROGRESS_BAR` | `0,255,255` | Cyan - progress bar |
 
 ### 3. Test Locally
 

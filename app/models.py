@@ -39,6 +39,9 @@ class AwtrixResponse(BaseModel):
     progressBC: Optional[List[int]] = Field(
         None, description="Progress bar background color RGB array"
     )
+    draw: Optional[List[dict]] = Field(
+        None, description="Array of drawing instructions for custom shapes"
+    )
 
     class Config:
         json_schema_extra = {

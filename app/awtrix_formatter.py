@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .config import Settings
 from .models import AwtrixResponse, GlucoseData
@@ -6,26 +6,24 @@ from .models import AwtrixResponse, GlucoseData
 
 def get_color_for_glucose(value: int, settings: Settings) -> List[int]:
     """
-    Returns RGB color based on glucose value.
+    Returns RGB color based on glucose value using configurable colors.
 
-    Color coding:
+    Color coding (configurable via env):
     - Red: <70 mg/dL (hypoglycemia)
     - Green: 70-180 mg/dL (normal range)
     - Yellow: 181-240 mg/dL (high)
     - Orange: >240 mg/dL (very high)
     """
-    if value < settings.glucose_low:
-        # Red for low blood sugar
-        return [255, 0, 0]
+    if value < settings.glucose_critical_low:
+        return settings.parse_color(settings.color_critical_low)
+    elif value < settings.glucose_low:
+        return settings.parse_color(settings.color_low)
     elif value <= settings.glucose_high:
-        # Green for normal range
-        return [0, 255, 0]
+        return settings.parse_color(settings.color_normal)
     elif value <= settings.glucose_very_high:
-        # Yellow for high
-        return [255, 255, 0]
+        return settings.parse_color(settings.color_high)
     else:
-        # Orange for very high
-        return [255, 128, 0]
+        return settings.parse_color(settings.color_very_high)
 
 
 def get_background_color(value: int, settings: Settings) -> Optional[List[int]]:
@@ -39,30 +37,98 @@ def get_background_color(value: int, settings: Settings) -> Optional[List[int]]:
     return None
 
 
-def get_arrow_for_delta(delta: Optional[int], settings: Settings) -> str:
+def rgb_to_hex(rgb: List[int]) -> str:
+    """Convert RGB array to hex color string for draw commands."""
+    return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
+
+
+def get_arrow_drawing(delta: Optional[int], settings: Settings, hex_color: str, x: int) -> Tuple[List[dict], int]:
     """
-    Returns arrow based on delta magnitude.
+    Returns draw commands for arrow at specified x position.
 
-    - Single arrow (→↑↓) for delta < 20
-    - Double arrow (↑↑↓↓) for delta >= 20
+    Arrow types based on delta:
+    - Stable (→) for delta ±0 to ±stable_threshold
+    - Diagonal (↗ ↘) for moderate changes
+    - Vertical (↑ ↓) for rapid changes
+
+    Returns: (draw_commands, arrow_width)
     """
-    if delta is None:
-        return "→"
+    abs_delta = abs(delta) if delta is not None else 0
 
-    abs_delta = abs(delta)
+    # Stable: horizontal arrow (→)
+    if delta is None or abs_delta <= settings.delta_stable_threshold:
+        return [
+            {"dl": [x, 3, x + 3, 3, hex_color]},      # Horizontal stem
+            {"dp": [x + 4, 3, hex_color]},            # Tip
+            {"dp": [x + 3, 2, hex_color]},            # Head top
+            {"dp": [x + 3, 4, hex_color]},            # Head bottom
+        ], 5
 
-    if abs_delta >= settings.delta_fast_threshold:
-        # Fast change - double arrows
+    # Rapid: vertical arrows (↑ ↓)
+    elif abs_delta > settings.delta_rapid_threshold:
         if delta > 0:
-            return "↑↑"
+            # Up arrow (↑)
+            return [
+                {"dl": [x + 2, 2, x + 2, 6, hex_color]},  # Stem
+                {"dp": [x + 2, 1, hex_color]},            # Tip
+                {"dp": [x + 1, 2, hex_color]},            # Head left inner
+                {"dp": [x + 3, 2, hex_color]},            # Head right inner
+                {"dp": [x, 3, hex_color]},                # Head left outer
+                {"dp": [x + 4, 3, hex_color]},            # Head right outer
+            ], 5
         else:
-            return "↓↓"
-    elif delta > 0:
-        return "↑"
-    elif delta < 0:
-        return "↓"
+            # Down arrow (↓) - user's design
+            return [
+                {"dl": [x + 2, 0, x + 2, 5, hex_color]},  # Stem
+                {"dp": [x + 2, 6, hex_color]},            # Tip
+                {"dp": [x + 1, 5, hex_color]},            # Head left inner
+                {"dp": [x + 3, 5, hex_color]},            # Head right inner
+                {"dp": [x, 4, hex_color]},                # Head left outer
+                {"dp": [x + 4, 4, hex_color]},            # Head right outer
+            ], 5
+
+    # Moderate: diagonal arrows (↗ ↘)
     else:
-        return "→"
+        if delta > 0:
+            # Diagonal up-right (↗)
+            return [
+                {"dp": [x, 5, hex_color]},
+                {"dp": [x + 1, 4, hex_color]},
+                {"dp": [x + 2, 3, hex_color]},
+                {"dp": [x + 3, 2, hex_color]},
+                {"dp": [x + 4, 1, hex_color]},
+                {"dp": [x + 4, 0, hex_color]},            # Tip top
+                {"dp": [x + 3, 0, hex_color]},            # Head left
+                {"dp": [x + 4, 2, hex_color]},            # Head down
+            ], 5
+        else:
+            # Diagonal down-right (↘) - user's design
+            return [
+                {"dp": [x, 1, hex_color]},
+                {"dp": [x + 1, 2, hex_color]},
+                {"dp": [x + 2, 3, hex_color]},
+                {"dp": [x + 3, 4, hex_color]},
+                {"dp": [x + 4, 5, hex_color]},
+                {"dp": [x + 4, 6, hex_color]},            # Tip bottom
+                {"dp": [x + 3, 6, hex_color]},            # Head left
+                {"dp": [x + 4, 4, hex_color]},            # Head up
+            ], 5
+
+
+def estimate_text_width(text: str) -> int:
+    """Estimate pixel width of text in AWTRIX3 default font."""
+    width = 0
+    for char in text:
+        if char in '1il:':
+            width += 2
+        elif char in ' ':
+            width += 2
+        elif char in '+-':
+            width += 4
+        else:
+            width += 4
+        width += 1
+    return width - 1 if width > 0 else 0
 
 
 def format_delta(delta: Optional[int]) -> str:
@@ -81,7 +147,9 @@ def format_for_awtrix(
     """
     Format glucose data for AWTRIX3 custom app.
 
-    Display format: "{value}{arrow} {delta}" (e.g., "120→ +3" or "120↑↑ +30")
+    Display format: {value}{arrow}{delta} (e.g., "149↘-11")
+
+    The arrow is pixel-drawn inline between the glucose value and delta.
 
     Args:
         glucose_data: Current glucose reading
@@ -93,30 +161,48 @@ def format_for_awtrix(
     value = glucose_data.value
     delta = glucose_data.delta
 
-    # Get arrow based on delta
-    arrow = get_arrow_for_delta(delta, settings)
+    # Get colors (configurable via env)
+    glucose_color = get_color_for_glucose(value, settings)
+    delta_color = settings.parse_color(settings.color_delta)
+    progress_color = settings.parse_color(settings.color_progress_bar)
+    progress_bg_color = settings.parse_color(settings.color_progress_bg)
 
-    # Format delta with sign
+    # Convert to hex for draw commands
+    glucose_hex = rgb_to_hex(glucose_color)
+    delta_hex = rgb_to_hex(delta_color)
+
+    # Format strings
+    value_str = str(value)
     delta_str = format_delta(delta)
 
-    # Build display text: "120→ +3"
-    if delta_str:
-        text = f"{value}{arrow} {delta_str}"
-    else:
-        text = f"{value}{arrow}"
+    # Calculate positions: "149" + arrow + "-11"
+    value_width = estimate_text_width(value_str)
+    arrow_x = value_width + 1  # After value + gap
 
-    # Get color based on glucose value
-    color = get_color_for_glucose(value, settings)
+    # Get arrow drawing at calculated position
+    arrow_draw, arrow_width = get_arrow_drawing(delta, settings, glucose_hex, arrow_x)
+
+    # Delta position after arrow
+    delta_x = arrow_x + arrow_width + 1
+
+    # Build draw commands: value + arrow + delta
+    draw_commands = [
+        {"dt": [0, 0, value_str, glucose_hex]},  # Glucose value
+    ]
+    draw_commands.extend(arrow_draw)  # Arrow pixels
+    if delta_str:
+        draw_commands.append({"dt": [delta_x, 0, delta_str, delta_hex]})  # Delta
 
     # Build response
     response = AwtrixResponse(
-        text=text,
-        color=color,
-        icon=settings.awtrix_icon,
+        text="",  # Empty - using draw array
+        color=glucose_color,
+        icon=None,
         duration=settings.awtrix_duration,
         noScroll=True,
-        center=True,
+        center=False,
         lifetime=settings.awtrix_lifetime,
+        draw=draw_commands,
     )
 
     # Add background for critical values
@@ -128,10 +214,9 @@ def format_for_awtrix(
     if value < settings.glucose_critical_low:
         response.blinkText = 500  # Blink every 500ms
 
-    # Add progress bar showing countdown to next API refresh
-    # Progress bar fills up as we get closer to the next refresh
+    # Add progress bar
     response.progress = refresh_progress
-    response.progressC = [0, 255, 255]  # Cyan progress bar
-    response.progressBC = [32, 32, 32]  # Dark gray background
+    response.progressC = progress_color
+    response.progressBC = progress_bg_color
 
     return response
