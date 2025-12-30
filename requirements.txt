@@ -9,6 +9,9 @@ python-dotenv>=1.0.0
 PyYAML>=6.0
 requests>=2.31.0
 
+# Optional: MQTT support for push-based updates (no local bridge needed)
+paho-mqtt>=1.6.0
+
 # Development dependencies
 pytest>=7.4.0
 pytest-asyncio>=0.21.0

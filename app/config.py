@@ -101,6 +101,19 @@ class Settings(BaseSettings):
     indicator_dot_blink_interval: int = 30       # Seconds
 
     # =========================================================================
+    # MQTT Settings (Optional - for push-based updates without local bridge)
+    # =========================================================================
+    mqtt_enabled: bool = False
+    mqtt_broker_host: Optional[str] = None
+    mqtt_broker_port: int = 1883
+    mqtt_username: Optional[str] = None
+    mqtt_password: Optional[str] = None
+    mqtt_use_tls: bool = False
+    mqtt_client_id: str = "dexcom-awtrix-bridge"
+    mqtt_awtrix_prefix: str = "awtrix"           # Topic prefix for AWTRIX
+    mqtt_app_name: str = "glucose"               # Custom app name
+
+    # =========================================================================
     # Validators
     # =========================================================================
 
