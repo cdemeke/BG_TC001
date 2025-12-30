@@ -24,8 +24,12 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
   - [2. Store Secrets](#2-store-secrets)
   - [3. Deploy to Cloud Run](#3-deploy-to-cloud-run)
   - [4. Get Service URL](#4-get-service-url)
-  - [5. Configure Local Bridge](#5-configure-local-bridge)
-- [Running as a Service](#running-as-a-service)
+  - [5. Choose Your Connection Method](#5-choose-your-connection-method)
+- [Remote Setup (No Local Bridge Required!)](#remote-setup-no-local-bridge-required)
+  - [Option 1: AWTRIX Native HTTP Polling](#option-1-awtrix-native-http-polling-easiest)
+  - [Option 2: MQTT Push](#option-2-mqtt-push-more-advanced)
+  - [Option 3: Local Bridge](#option-3-local-bridge-original-method)
+- [Running as a Service (Local Bridge Only)](#running-as-a-service-local-bridge-only)
   - [macOS (launchd)](#macos-launchd)
   - [Linux (systemd)](#linux-systemd)
 - [API Endpoints](#api-endpoints)
@@ -46,9 +50,9 @@ Alternatively, if you would rather not do any configuration, you can pay ~$100 U
     - Modded using *AWTRIX3* <a href="https://blueforcer.github.io/awtrix3/#/" target="_blank">instructions</a>.
     - When modding the Ulanzi TC001, use a high-speed USB-C data cable (took a long time to realize and fix that when I was modding it)
 
-- ~$0 Local computer or Raspberry Pi (as the bridge to send data to TC001)
+- **Optional**: Local computer or Raspberry Pi (only needed for Option 3: Local Bridge)
 
-    - Note: This computer needs to be connected and always on to send updates to Ulanzi TC001
+    - Note: With Options 1 & 2, you do NOT need a local computer running 24/7!
 
 ## Display Format
 
@@ -74,6 +78,38 @@ Thresholds are configurable via `DELTA_STABLE_THRESHOLD` (default 5) and `DELTA_
 
 ## Architecture
 
+You have **three options** for connecting AWTRIX3 to your glucose data:
+
+### Option 1: AWTRIX Native Polling (Recommended - No Local Server!)
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Dexcom G7     │────▶│   Cloud Run     │◀────│    AWTRIX3      │
+│   (CGM)         │     │   (FastAPI)     │     │  (LED Display)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
+
+AWTRIX3 polls your Cloud Run service directly every 60 seconds. **No local bridge needed!**
+
+### Option 2: MQTT Push (No Local Server!)
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Dexcom G7     │────▶│   Cloud Run     │────▶│  MQTT Broker    │
+│   (CGM)         │     │   (FastAPI)     │     │  (HiveMQ, etc)  │
+└─────────────────┘     └─────────────────┘     └────────┬────────┘
+                                                         │
+                                                         ▼
+                                                ┌─────────────────┐
+                                                │    AWTRIX3      │
+                                                │  (LED Display)  │
+                                                └─────────────────┘
+```
+
+Cloud Run pushes updates to MQTT broker, AWTRIX3 subscribes. **No local bridge needed!**
+
+### Option 3: Local Bridge (Original)
+
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │   Dexcom G7     │────▶│   Cloud Run     │◀────│  Local Bridge   │
@@ -87,8 +123,7 @@ Thresholds are configurable via `DELTA_STABLE_THRESHOLD` (default 5) and `DELTA_
                                                 └─────────────────┘
 ```
 
-1. **Cloud Run Service**: Fetches glucose data from Dexcom Share API via `pydexcom`
-2. **Local Bridge**: Polls Cloud Run and pushes to your AWTRIX3 on your local network
+Local bridge polls Cloud Run and pushes to AWTRIX3. Requires always-on computer.
 
 ## Prerequisites
 
@@ -251,7 +286,104 @@ gcloud run deploy dexcom-awtrix \
 gcloud run services describe dexcom-awtrix --region us-central1 --format='value(status.url)'
 ```
 
-### 5. Configure Local Bridge
+### 5. Choose Your Connection Method
+
+After deploying to Cloud Run, you have three options:
+
+---
+
+## Remote Setup (No Local Bridge Required!)
+
+### Option 1: AWTRIX Native HTTP Polling (Easiest)
+
+AWTRIX3 can poll an external HTTP endpoint directly. This is the simplest setup:
+
+1. **Get your Cloud Run URL**:
+   ```bash
+   gcloud run services describe dexcom-awtrix --region us-central1 --format='value(status.url)'
+   # Example: https://dexcom-awtrix-abc123-uc.a.run.app
+   ```
+
+2. **Open AWTRIX3 web interface**: Go to `http://YOUR_AWTRIX_IP` in your browser
+
+3. **Create a Custom App with HTTP Request**:
+   - Go to **Apps** → **Custom Apps**
+   - Create a new app or edit existing
+   - Configure HTTP endpoint:
+     - **URL**: `https://YOUR_CLOUD_RUN_URL/glucose`
+     - **Interval**: `60` seconds
+     - **Parse as JSON**: Enabled
+
+4. **Done!** AWTRIX3 will now poll your Cloud Run service every 60 seconds.
+
+**Pros**: Simple, no extra services needed
+**Cons**: One-way communication, requires AWTRIX3 firmware 0.90+
+
+---
+
+### Option 2: MQTT Push (More Advanced)
+
+Use MQTT for push-based updates. AWTRIX3 subscribes to an MQTT broker, and Cloud Run publishes updates.
+
+#### Step 1: Set Up MQTT Broker
+
+Use a free cloud MQTT broker:
+- <a href="https://www.hivemq.com/mqtt-cloud-broker/" target="_blank">HiveMQ Cloud</a> (free tier available)
+- <a href="https://www.cloudmqtt.com/" target="_blank">CloudMQTT</a>
+- Or self-host with Mosquitto
+
+#### Step 2: Configure AWTRIX3 for MQTT
+
+1. Open AWTRIX3 web interface (`http://YOUR_AWTRIX_IP`)
+2. Go to **Settings** → **MQTT**
+3. Configure:
+   - **Broker**: Your MQTT broker host
+   - **Port**: 1883 (or 8883 for TLS)
+   - **Username/Password**: If required
+   - **Topic Prefix**: `awtrix` (default)
+
+#### Step 3: Deploy with MQTT Environment Variables
+
+```bash
+gcloud run deploy dexcom-awtrix \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-secrets="DEXCOM_USERNAME=dexcom-username:latest,DEXCOM_PASSWORD=dexcom-password:latest" \
+  --set-env-vars="DEXCOM_REGION=us,MQTT_ENABLED=true,MQTT_BROKER_HOST=broker.hivemq.com,MQTT_BROKER_PORT=1883"
+```
+
+#### Step 4: Set Up Cloud Scheduler
+
+Create a Cloud Scheduler job to trigger MQTT publish every minute:
+
+```bash
+# Create service account for scheduler
+gcloud iam service-accounts create glucose-scheduler
+
+# Grant invoker permission
+gcloud run services add-iam-policy-binding dexcom-awtrix \
+  --region=us-central1 \
+  --member="serviceAccount:glucose-scheduler@YOUR_PROJECT.iam.gserviceaccount.com" \
+  --role="roles/run.invoker"
+
+# Create scheduler job
+gcloud scheduler jobs create http glucose-mqtt-publish \
+  --location=us-central1 \
+  --schedule="* * * * *" \
+  --uri="https://YOUR_CLOUD_RUN_URL/mqtt/publish" \
+  --http-method=POST \
+  --oidc-service-account-email=glucose-scheduler@YOUR_PROJECT.iam.gserviceaccount.com
+```
+
+**Pros**: Real-time updates, bi-directional communication possible
+**Cons**: Requires MQTT broker, more complex setup
+
+---
+
+### Option 3: Local Bridge (Original Method)
+
+If you prefer to run a local bridge script:
 
 Edit `local_bridge/config.yaml`:
 
@@ -269,7 +401,9 @@ cd local_bridge
 python bridge.py --config config.yaml
 ```
 
-## Running as a Service
+---
+
+## Running as a Service (Local Bridge Only)
 
 IMPORTANT: The local bridge script needs to run continuously to poll Cloud Run and push updates to your AWTRIX3. Here's how to set it up as a background service.
 
@@ -381,7 +515,11 @@ sudo systemctl start glucose-bridge
 | `/health` | GET | Health check |
 | `/glucose` | GET | AWTRIX3-formatted glucose data |
 | `/glucose/raw` | GET | Raw glucose data (debugging) |
-| `/glucose/status` | GET | Rate limit status |
+| `/glucose/status` | GET | Rate limit and cache status |
+| `/glucose/statistics` | GET | API usage statistics |
+| `/mqtt/publish` | POST | Publish glucose to MQTT (trigger endpoint) |
+| `/mqtt/status` | GET | MQTT connection status |
+| `/setup/remote` | GET | Remote setup guide (JSON) |
 
 ## Rate Limiting
 
