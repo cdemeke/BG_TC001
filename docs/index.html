@@ -4,782 +4,305 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SugarClock — An Open Source CGM Display</title>
+  <title>SugarClock - An Open Source CGM Display</title>
   <meta name="description"
-    content="SugarClock — An open source, DIY glucose display project using a $40 pixel clock. Easily see your glucose on your desk or nightstand.">
+    content="SugarClock turns an affordable Ulanzi TC001 smart pixel clock into an open source, color-coded CGM display.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Space+Mono:wght@400;700&amp;display=swap"
     rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
-
-  <!-- Add feather icons for UI icons -->
   <script src="https://unpkg.com/feather-icons"></script>
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-  <!-- Paste this right before your closing </head> tag -->
-  <script type="text/javascript">
-    (function (e, c) {
-      if (!c.__SV) {
-        var l, h; window.mixpanel = c; c._i = []; c.init = function (q, r, f) {
-          function t(d, a) { var g = a.split("."); 2 == g.length && (d = d[g[0]], a = g[1]); d[a] = function () { d.push([a].concat(Array.prototype.slice.call(arguments, 0))) } } var b = c; "undefined" !== typeof f ? b = c[f] = [] : f = "mixpanel"; b.people = b.people || []; b.toString = function (d) { var a = "mixpanel"; "mixpanel" !== f && (a += "." + f); d || (a += " (stub)"); return a }; b.people.toString = function () { return b.toString(1) + ".people (stub)" }; l = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
-          for (h = 0; h < l.length; h++)t(b, l[h]); var n = "set set_once union unset remove delete".split(" "); b.get_group = function () { function d(p) { a[p] = function () { b.push([g, [p].concat(Array.prototype.slice.call(arguments, 0))]) } } for (var a = {}, g = ["get_group"].concat(Array.prototype.slice.call(arguments, 0)), m = 0; m < n.length; m++)d(n[m]); return a }; c._i.push([q, r, f])
-        }; c.__SV = 1.2; var k = e.createElement("script"); k.type = "text/javascript"; k.async = !0; k.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" ===
-          e.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"; e = e.getElementsByTagName("script")[0]; e.parentNode.insertBefore(k, e)
-      }
-    })(document, window.mixpanel || [])
-
-    mixpanel.init('7ac12c6e4d00986ca1cec3580f187fe0', {
-      autocapture: true,
-      record_sessions_percent: 100,
-    })
-  </script>
 </head>
 
 <body>
-
-  <!-- ========== NAVIGATION ========== -->
   <nav class="site-nav">
     <div class="container">
-      <a href="index.html" class="nav-brand">
-        <img src="images/logo.png" alt="SugarClock" class="nav-logo">
+      <a href="index.html" class="nav-brand" aria-label="SugarClock home">
+        <img src="images/logo.png" alt="" class="nav-logo">
         <span>SugarClock</span>
       </a>
-      <button class="nav-toggle" aria-label="Open menu"
-        onclick="document.querySelector('.nav-links').classList.toggle('open')">
-        <span></span><span></span><span></span>
-      </button>
+
       <ul class="nav-links">
-        <li>
-          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-            <i data-feather="sun" class="sun-icon"></i>
-            <i data-feather="moon" class="moon-icon"></i>
-          </button>
-        </li>
-        <li><a href="#how-it-works" class="btn btn-primary btn-sm">Install Now</a></li>
+        <li><a href="#why">Why</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="support.html">Docs</a></li>
+        <li><a href="https://github.com/cdemeke/SugarClock" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
+
+      <div class="nav-actions">
+        <a href="#install" class="btn btn-sm">Install Now</a>
+      </div>
     </div>
   </nav>
 
-  <!-- ========== HERO CANVAS ========== -->
   <main>
-    <section class="hero"
-      style="padding: 0; height: 100vh; display: flex; align-items: center; justify-content: center; position: relative;">
-      <canvas id="pixel-canvas"
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
-      <div class="hero-content">
-        <p class="hero-subtitle"
-          style="margin: 0 auto 2rem auto; font-size: 1.25rem; opacity: 0; animation: fadeIn 1s ease 2.5s forwards; max-width: 600px;">
-          A blood sugar monitoring device shouldn't cost a fortune. Turn a ~$40 smart clock into a dedicated,
-          color-coded CGM display with SugarClock.
-        </p>
-        <div class="hero-buttons" style="justify-content: center; opacity: 0; animation: fadeIn 1s ease 3s forwards;">
-          <a href="#setup-cards" class="btn btn-primary">Setup Guide</a>
-          <a href="support.html" class="btn btn-secondary">FAQ</a>
+    <section class="hero">
+      <div class="container">
+        <div class="masthead fade-up">
+          <img src="images/logo.png" alt="SugarClock display showing a glucose trend" class="brand-mark">
+          <h1 class="brand-title">SugarClock</h1>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy fade-up delay-1">
+            <h2>A blood sugar monitor shouldn't cost a fortune.</h2>
+            <p class="hero-kicker">A simple, open source CGM display for your desk or nightstand.</p>
+            <p>SugarClock converts a low-cost Ulanzi TC001 smart pixel clock into a dedicated glucose display for
+              Dexcom Share or Nightscout data. Big numbers, clear trend arrows, and no proprietary subscription wall.</p>
+
+            <div class="hero-actions">
+              <span class="stat-pill">~$40 hardware</span>
+              <a href="#install" class="btn">Install Now</a>
+              <a href="support.html" class="btn btn-secondary">Setup Guide</a>
+            </div>
+          </div>
+
+          <div class="hero-photo-wrap fade-up delay-2">
+            <img src="images/hero.png" alt="SugarClock showing a glucose reading on a pixel clock" class="hero-photo">
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ========== DEVELOPER SETUP CARDS ========== -->
-    <section id="setup-cards" class="section-py bg-base" style="position: relative; z-index: 10;">
+    <section id="why" class="section-py">
       <div class="container">
         <div class="section-header fade-up">
-          <span class="section-label">Quick Start</span>
-          <h2>Build Your Display</h2>
-          <p class="section-desc">Get your SugarClock up and running in three simple steps.</p>
+          <h2>Why build it yourself?</h2>
+          <p class="section-desc">The goal is not another app. It is a glanceable display that makes CGM data easier to
+            see across a room without buying an expensive dedicated monitor.</p>
         </div>
 
-        <div class="features-grid fade-up delay-1">
-          <!-- Card 1 -->
-          <div class="clean-card feature-card">
-            <div class="feature-icon bg-soft-green">
-              <i data-feather="monitor"></i>
-            </div>
-            <h3>1. Acquire Hardware</h3>
-            <p class="text-muted">Purchase the Ulanzi TC001 Smart Pixel Clock. It provides the perfect Wi-Fi enabled LED
-              matrix framework for this project.</p>
-            <a href="https://www.amazon.com/ULANZI-TC001-Smart-Pixel-Clock/dp/B0CXX91TY5" target="_blank" rel="noopener"
-              class="btn btn-primary btn-sm mt-3" style="display: inline-flex; width: fit-content;">Buy on Amazon <i
-                data-feather="external-link" class="icon-sm"></i></a>
-          </div>
-          <!-- Card 2 -->
-          <div class="clean-card feature-card">
-            <div class="feature-icon bg-soft-green">
-              <i data-feather="download"></i>
-            </div>
-            <h3>2. Install Software</h3>
-            <p class="text-muted">Plug the clock in via USB-C and click one button. Our browser-based installer loads
-              the
-              software and sets up your Wi-Fi in a single step.</p>
-            <a href="#how-it-works" class="btn btn-primary btn-sm mt-3"
-              style="display: inline-flex; width: fit-content;">Start Install</a>
-          </div>
-          <!-- Card 3 -->
-          <div class="clean-card feature-card">
-            <div class="feature-icon bg-soft-green">
-              <i data-feather="sliders"></i>
-            </div>
-            <h3>3. Add Your Glucose Source</h3>
-            <p class="text-muted">Once the clock connects to your Wi-Fi, open its settings page in any browser and
-              enter your Dexcom or Nightscout details. Your reading appears within a minute.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== HOW IT WORKS ========== -->
-    <section id="how-it-works" class="section-py" style="padding-top: 2rem;">
-      <div class="container" style="max-width: 720px;">
-        <div class="section-header fade-up">
-          <span class="section-label">Installation</span>
-          <h2>Getting Started</h2>
-          <p class="section-desc">Everything happens right in your browser — no downloads, no terminal, no coding
-            required.</p>
-        </div>
-
-        <!-- Alternative: Mac app card (shown when Web Serial unavailable) -->
-        <div id="mac-app-card" class="clean-card install-flash-card fade-up delay-1" style="display: none;">
-          <div class="install-flash-inner">
-            <div class="install-flash-header">
-              <div class="feature-icon bg-soft-green" style="margin-bottom: 0;">
-                <i data-feather="monitor"></i>
-              </div>
-              <div>
-                <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Install with the Mac App</h2>
-                <p class="text-muted text-sm">Your browser doesn't support direct USB installation. Use our free Mac app
-                  instead.</p>
-              </div>
-            </div>
-
-            <ol class="install-prereq-list">
-              <li>Download and open the <strong>SugarClock Setup</strong> app on your Mac</li>
-              <li>Plug the Ulanzi TC001 into your Mac with a USB-C <strong>data</strong> cable</li>
-              <li>Follow the guided steps — the app handles everything automatically</li>
-            </ol>
-
-            <div class="install-button-wrap">
-              <a href="https://github.com/cdemeke/SugarClock/releases/latest" target="_blank" rel="noopener"
-                class="btn btn-primary btn-lg" style="text-decoration: none;">
-                <i data-feather="download"></i>
-                Download Mac App
-              </a>
-            </div>
-
-            <p class="text-muted text-sm" style="text-align: center; margin-top: 1rem;">
-              Want to use the browser installer instead? Open this page in
-              <strong>Google Chrome</strong> or <strong>Microsoft Edge</strong> on desktop.
-            </p>
-          </div>
-        </div>
-
-        <!-- Flash card (shown when Web Serial is available) -->
-        <div id="web-flash-card" class="clean-card install-flash-card fade-up delay-1">
-          <div class="install-flash-inner">
-            <div class="install-flash-header">
-              <div class="feature-icon bg-soft-green" style="margin-bottom: 0;">
-                <i data-feather="download"></i>
-              </div>
-              <div>
-                <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Install SugarClock</h2>
-                <p class="text-muted text-sm">SugarClock v0.1.0 &mdash; ESP32 &mdash; Build 28</p>
-              </div>
-            </div>
-
-            <ol class="install-prereq-list">
-              <li>Plug the Ulanzi TC001 into your computer with a USB-C <strong>data</strong> cable</li>
-              <li>Click <strong>Install</strong> below — you'll enter your WiFi details during the setup flow</li>
-            </ol>
-
-            <!-- Hidden fields to store WiFi values from the dialog -->
-            <input type="hidden" id="wifi-ssid">
-            <input type="hidden" id="wifi-pass">
-
-            <div class="callout callout-info" style="margin: 0 0 1.5rem;">
-              <div class="callout-icon"><i data-feather="volume-2"></i></div>
-              <div class="callout-text">
-                <strong>You may hear a beeping noise</strong> from the clock while the software is being
-                installed. This is completely normal and will stop once installation is complete.
-              </div>
-            </div>
-
-            <div class="install-button-wrap">
-              <esp-web-install-button id="install-btn" manifest="manifest.json">
-                <button class="btn btn-primary btn-lg" slot="activate">
-                  <i data-feather="zap"></i>
-                  Install SugarClock
-                </button>
-              </esp-web-install-button>
-            </div>
-
-            <div id="wifi-status" class="install-wifi-status" style="display: none;"></div>
-
-            <p class="text-muted text-sm" style="text-align: center; margin-top: 1rem;">
-              Installation takes about 2 minutes. On first install the device storage will be erased to start fresh.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== DEV INFO ========== -->
-    <section id="compare" class="section-py">
-      <div class="container">
-        <div class="section-header fade-up">
-          <span class="section-label">Open Source</span>
-          <h2>Built for the Community</h2>
-          <p class="section-desc">SugarClock is developed openly as a cost-effective alternative to commercial displays.
-          </p>
-        </div>
-
-        <div class="table-container clean-card fade-up">
-          <table class="comparison-table text-sm">
+        <div class="comparison-shell fade-up delay-1">
+          <table class="comparison-table">
             <thead>
               <tr>
-                <th>Aspect</th>
                 <th>Traditional Solutions</th>
-                <th class="highlight-col">SugarClock Project</th>
+                <th class="highlight-col">SugarClock</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Hardware Cost</td>
-                <td>$100 - $200+</td>
-                <td class="highlight-col fw-bold text-primary">~$40 (Hardware only)</td>
+                <td>$100-$200+ displays <span class="detail">Dedicated devices can be expensive or hard to customize.</span></td>
+                <td class="highlight-col">~$40 hardware <span class="detail">Built around the Ulanzi TC001 smart clock.</span></td>
               </tr>
               <tr>
-                <td>Software License</td>
-                <td>Proprietary</td>
-                <td class="highlight-col">MIT / Open Source</td>
+                <td>Closed software <span class="detail">Limited visibility into how data is fetched or shown.</span></td>
+                <td class="highlight-col">Open source <span class="detail">MIT licensed firmware and web UI.</span></td>
               </tr>
               <tr>
-                <td>Nightscout Support</td>
-                <td>Often requires workarounds</td>
-                <td class="highlight-col"><i data-feather="check" class="text-primary icon-sm"></i> First-class
-                  integration</td>
+                <td>Configuration friction <span class="detail">Often requires vendor accounts or hidden settings.</span></td>
+                <td class="highlight-col">Browser setup <span class="detail">Install from the web and configure locally.</span></td>
               </tr>
               <tr>
-                <td>Customization</td>
-                <td>Locked down</td>
-                <td class="highlight-col"><i data-feather="check" class="text-primary icon-sm"></i> Fully configurable
-                  via UI</td>
+                <td>Narrow integrations <span class="detail">Support can be tied to one ecosystem.</span></td>
+                <td class="highlight-col">Dexcom + Nightscout <span class="detail">Use Dexcom Share or any compatible JSON API.</span></td>
               </tr>
               <tr>
-                <td>Code Access</td>
-                <td>None</td>
-                <td class="highlight-col"><a href="https://github.com/cdemeke/SugarClock" target="_blank"
-                    class="btn-text">View Repository</a></td>
+                <td>Hard to inspect <span class="detail">You cannot always see what runs on the device.</span></td>
+                <td class="highlight-col">Hackable <span class="detail"><a href="https://github.com/cdemeke/SugarClock"
+                    target="_blank" rel="noopener">Read the source</a> and make it yours.</span></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
+
+    <section id="process" class="section-py">
+      <div class="container">
+        <div class="section-header fade-up">
+          <span class="section-label">Process</span>
+          <h2>From clock to CGM display</h2>
+        </div>
+
+        <div class="process-grid fade-up delay-1">
+          <article class="process-card">
+            <i data-feather="shopping-bag"></i>
+            <h3>Step 1: Start</h3>
+            <p>Pick up an Ulanzi TC001 smart pixel clock and plug it into your computer with a USB-C data cable.</p>
+          </article>
+
+          <article class="process-card">
+            <i data-feather="download-cloud"></i>
+            <h3>Step 2: Install</h3>
+            <p>Use the browser installer to flash SugarClock firmware and prepare the clock for your Wi-Fi network.</p>
+          </article>
+
+          <article class="process-card">
+            <i data-feather="wifi"></i>
+            <h3>Step 3: Connect</h3>
+            <p>Open the clock's local settings page and add your Dexcom Share or Nightscout configuration.</p>
+          </article>
+
+          <article class="process-card">
+            <i data-feather="activity"></i>
+            <h3>Feature Cards</h3>
+            <p>Readable glucose values, trend arrows, color-coded ranges, and display modes for different rooms.</p>
+          </article>
+
+          <article class="process-card">
+            <i data-feather="sliders"></i>
+            <h3>Configuration</h3>
+            <p>Adjust glucose source, units, brightness, alerts, timers, weather, and other device settings locally.</p>
+          </article>
+
+          <article class="process-card">
+            <i data-feather="award"></i>
+            <h3>User Fit</h3>
+            <p>Designed as a convenience display for caregivers, desks, nightstands, and shared household spaces.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="section-py install-section">
+      <div class="container">
+        <div class="section-header fade-up">
+          <span class="section-label">Install</span>
+          <h2>Ready to see your numbers clearly?</h2>
+          <p class="section-desc">Installation runs in your browser on Chrome or Edge desktop. The Mac setup app is
+            available when your browser does not support direct USB installation.</p>
+        </div>
+
+        <div id="mac-app-card" class="install-panel clean-card install-flash-card hidden-initial fade-up delay-1">
+          <div class="install-flash-inner">
+            <div class="install-flash-header">
+              <div class="feature-icon">
+                <i data-feather="monitor"></i>
+              </div>
+              <div>
+                <h2>Install with the Mac App</h2>
+                <p class="text-muted text-sm">Your browser does not support direct USB installation.</p>
+              </div>
+            </div>
+
+            <ol class="install-prereq-list">
+              <li>Download and open the SugarClock Setup app on your Mac.</li>
+              <li>Plug the Ulanzi TC001 into your Mac with a USB-C data cable.</li>
+              <li>Follow the guided setup flow.</li>
+            </ol>
+
+            <div class="install-button-wrap">
+              <a href="https://github.com/cdemeke/SugarClock/releases/latest" target="_blank" rel="noopener"
+                class="btn btn-lg">
+                <i data-feather="download"></i>
+                Download Mac App
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div id="web-flash-card" class="install-panel clean-card install-flash-card fade-up delay-1">
+          <div class="install-flash-inner">
+            <div class="install-flash-header">
+              <div class="feature-icon">
+                <i data-feather="zap"></i>
+              </div>
+              <div>
+                <h2>Install SugarClock</h2>
+                <p class="text-muted text-sm">SugarClock v0.1.0 - ESP32 - Build 28</p>
+              </div>
+            </div>
+
+            <ol class="install-prereq-list">
+              <li>Plug the Ulanzi TC001 into your computer with a USB-C data cable.</li>
+              <li>Click Install and choose the clock when your browser asks for a serial device.</li>
+              <li>After flashing, follow the display prompt to finish local setup.</li>
+            </ol>
+
+            <div class="callout callout-info">
+              <div class="callout-icon"><i data-feather="volume-2"></i></div>
+              <div class="callout-text">
+                <strong>You may hear beeping during installation.</strong> This is normal and stops once installation
+                completes.
+              </div>
+            </div>
+
+            <div class="install-button-wrap">
+              <esp-web-install-button id="install-btn" manifest="manifest.json">
+                <button class="btn btn-lg" type="button" slot="activate">
+                  <i data-feather="zap"></i>
+                  Install SugarClock
+                </button>
+              </esp-web-install-button>
+            </div>
+
+            <p class="text-muted text-sm text-center">
+              SugarClock is not a medical device. Use your CGM receiver, app, or meter for medical decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="container fade-up">
+        <h2>Make your CGM data visible.</h2>
+        <p>Build a low-cost display you can understand at a glance, then tune it to fit your home, desk, or nightstand.</p>
+        <div class="cta-actions">
+          <a href="#install" class="btn">Install Now</a>
+          <a href="support.html" class="btn btn-secondary">Setup Guide</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand-col">
           <a href="index.html" class="nav-brand">
-            <img src="images/logo.png" alt="SugarClock" class="nav-logo gray icon-sm">
-            <span class="text-dark">SugarClock</span>
+            <img src="images/logo.png" alt="" class="nav-logo">
+            <span>SugarClock</span>
           </a>
-          <p class="footer-desc mt-3">An open-source DIY project aimed at making glucose data more visible and
-            accessible.</p>
+          <p class="mt-3">An open-source DIY project for making glucose data more visible and accessible.</p>
         </div>
         <div class="footer-links">
-          <h4>Help</h4>
+          <h4>Links</h4>
           <ul>
-            <li><a href="support.html">FAQ</a></li>
-            <li><a href="https://github.com/cdemeke/SugarClock/issues" target="_blank" rel="noopener">Issue Tracker</a>
-            </li>
+            <li><a href="support.html">Setup Guide</a></li>
+            <li><a href="https://github.com/cdemeke/SugarClock/issues" target="_blank" rel="noopener">Issue Tracker</a></li>
+            <li><a href="https://github.com/cdemeke/SugarClock" target="_blank" rel="noopener">Source Code</a></li>
           </ul>
         </div>
         <div class="footer-links">
           <h4>Project</h4>
-          <ul>
-            <li><a href="https://github.com/cdemeke/SugarClock" target="_blank" rel="noopener">Source Code</a></li>
-          </ul>
+          <p>Released under the MIT License by SugarClock contributors.</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 SugarClock Contributors. Released under the MIT License.</p>
-        <p class="disclaimer mt-2"><strong>Disclaimer:</strong> SugarClock is not a medical device. Do not use its
-          display for making medical decisions. Always consult your primary CGM receiver/app.</p>
+        <p>&copy; 2026 SugarClock Contributors. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
   <script>
-    // Initialize standard icons
     feather.replace();
 
-    // Theme toggling logic
-    const themeToggle = document.getElementById('theme-toggle');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-    function getThemeSafe() {
-      try { return localStorage.getItem('theme'); } catch (e) { return null; }
-    }
-
-    function setThemeSafe(theme) {
-      try { localStorage.setItem('theme', theme); } catch (e) { }
-    }
-
-    // Function to apply theme
-    function applyTheme(theme) {
-      if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-      } else {
-        document.body.classList.remove('dark-theme');
-      }
-      setThemeSafe(theme);
-    }
-
-    // Determine initial theme
-    function initTheme() {
-      const savedTheme = getThemeSafe();
-      if (savedTheme) {
-        applyTheme(savedTheme);
-      } else {
-        const osTheme = prefersDarkScheme.matches ? 'dark' : 'light';
-        applyTheme(osTheme);
-      }
-    }
-
-    // Listen for OS theme changes
-    prefersDarkScheme.addEventListener('change', (e) => {
-      if (!getThemeSafe()) {
-        applyTheme(e.matches ? 'dark' : 'light');
-      }
-    });
-
-    // Toggle button click handler
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      applyTheme(newTheme);
-    });
-
-    // Initialize theme on load
-    initTheme();
-
-    // Intersection Observer for scroll animations
     document.addEventListener("DOMContentLoaded", () => {
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1
-      };
-
-      const observer = new IntersectionObserver((entries, observer) => {
+      const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+            entry.target.classList.add("is-visible");
+            obs.unobserve(entry.target);
           }
         });
-      }, observerOptions);
+      }, { threshold: 0.1 });
 
-      document.querySelectorAll('.fade-up').forEach((el) => {
-        observer.observe(el);
-      });
+      document.querySelectorAll(".fade-up").forEach(el => observer.observe(el));
+
+      if (!("serial" in navigator)) {
+        document.getElementById("web-flash-card").style.display = "none";
+        document.getElementById("mac-app-card").style.display = "block";
+        feather.replace();
+      }
     });
-
-    // Detect unsupported browsers (no Web Serial API)
-    if (!("serial" in navigator)) {
-      document.getElementById("web-flash-card").style.display = "none";
-      document.getElementById("mac-app-card").style.display = "block";
-      feather.replace(); // re-render icons in the newly visible card
-    }
   </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // ================================================================
-      // ESP Web Tools Dialog Injection
-      // ================================================================
-      // Completion detection strategy (replaces the old 3-method approach):
-      //   1. Track when ewt-page-progress appears → installStarted = true
-      //   2. When dialog is REMOVED from DOM → trigger WiFi send
-      //   This is far more reliable than trying to parse text in nested
-      //   shadow roots to detect the completion page.
-      // ================================================================
-
-      let pollId = null;
-      let wifiSent = false;
-      let installStarted = false;
-      let erasePageDone = false;
-
-      function triggerWifiSend() {
-        if (wifiSent) return;
-        if (!installStarted) return;
-        wifiSent = true;
-
-        var ssid = document.getElementById('wifi-ssid').value.trim();
-        if (ssid) {
-          showWifiStatus('Installation complete! Sending WiFi credentials to clock...', 'progress');
-          // Wait 6s for device to reboot and ESP Web Tools to release serial port
-          setTimeout(function () { sendWifiCreds(true); }, 6000);
-        } else {
-          // No WiFi was entered in the dialog (erase prompt may have been skipped on reinstall).
-          // The device may already have WiFi from old config — check the scrolling display for its IP.
-          var el = document.getElementById('wifi-status');
-          el.innerHTML = 'Installation complete! Check the clock display for its IP address (e.g. "Visit 192.168.x.x to setup"), ' +
-            'then open that address in your browser to finish setup.<br><br>' +
-            'If the clock shows <strong>SugarClock-Setup</strong> WiFi instead, connect to that network and visit ' +
-            '<a href="http://192.168.4.1" target="_blank" style="color:#2e7d32;font-weight:600;">192.168.4.1</a>.';
-          el.className = 'install-wifi-status status-success';
-          el.style.display = 'block';
-        }
-      }
-
-      new MutationObserver(() => {
-        const dialog = document.querySelector('ewt-install-dialog');
-
-        if (!dialog) {
-          // Dialog removed from DOM — install may have finished
-          if (pollId) { clearInterval(pollId); pollId = null; }
-          triggerWifiSend();
-          return;
-        }
-        if (pollId) return;
-
-        pollId = setInterval(() => {
-          if (!document.contains(dialog)) {
-            clearInterval(pollId);
-            pollId = null;
-            return;
-          }
-
-          const sr = dialog.shadowRoot;
-          if (!sr) return;
-
-          // Track install progress — once we see the progress element, install has started
-          if (sr.querySelector('ewt-page-progress')) {
-            installStarted = true;
-          }
-
-          // Detect completion while dialog is still open (ewt-page-message = "Installation complete!" page)
-          if (installStarted && sr.querySelector('ewt-page-message')) {
-            triggerWifiSend();
-          }
-
-          // --- Cleanup: always remove our injections if not on the erase page ---
-          // Lit keeps our injected DOM when it transitions pages, so we
-          // unconditionally remove on every cycle first, then re-check.
-          var contentDiv = sr.querySelector('[slot="content"]');
-          if (!contentDiv) return;
-          var text = contentDiv.textContent || '';
-          var isErasePage = !erasePageDone && text.toLowerCase().includes('erase');
-          var existing = sr.querySelector('.wifi-inject');
-
-          if (existing && !isErasePage) {
-            existing.remove();
-            erasePageDone = true; // We left the erase page — never re-inject
-          }
-          if (existing && isErasePage) {
-            return; // Already on erase page with injection present
-          }
-          if (!isErasePage) {
-            // ----------------------------------------------------------
-            // SUPPRESS ESP Web Tools built-in WiFi provisioning screen
-            // ----------------------------------------------------------
-            // After install, EWT may briefly show an Improv WiFi screen.
-            // Since we already collected WiFi on the erase page, hide it
-            // and trigger our own send instead.
-            var pageMsg = sr.querySelector('ewt-page-message');
-            if (!pageMsg) {
-              // Check for Improv WiFi page (contains WiFi input fields)
-              var inputs = contentDiv.querySelectorAll('input[type="text"], input[type="password"]');
-              if (inputs.length >= 1 && installStarted) {
-                // This is the EWT WiFi provisioning screen — skip it by closing dialog
-                var closeBtn = sr.querySelector('mwc-icon-button, ewt-icon-button, [dialogaction="close"]');
-                if (closeBtn) closeBtn.click();
-              }
-            }
-            return; // Not the erase page — nothing to inject
-          }
-
-          // ----------------------------------------------------------
-          // ERASE PAGE — rename headings + inject WiFi fields
-          // ----------------------------------------------------------
-          if (isErasePage) {
-            var allEls = sr.querySelectorAll('*');
-            for (var i = 0; i < allEls.length; i++) {
-              var el = allEls[i];
-              for (var j = 0; j < el.childNodes.length; j++) {
-                var child = el.childNodes[j];
-                if (child.nodeType === Node.TEXT_NODE) {
-                  if (child.textContent.includes('Erase device'))
-                    child.textContent = child.textContent.replace('Erase device', 'Configure device');
-                  if (child.textContent.includes('Do you want to erase'))
-                    child.textContent = '';
-                  if (child.textContent.includes('All data on the device will be lost'))
-                    child.textContent = '';
-                  if (child.textContent.trim() === 'Configure device' && el.closest && (el.closest('label') || el.tagName === 'LABEL'))
-                    child.textContent = ' Yes, I agree';
-                }
-              }
-            }
-            var checkboxEls = contentDiv.querySelectorAll('ew-checkbox, ewt-checkbox, md-checkbox');
-            for (var k = 0; k < checkboxEls.length; k++) {
-              for (var n = 0; n < checkboxEls[k].childNodes.length; n++) {
-                var cn = checkboxEls[k].childNodes[n];
-                if (cn.nodeType === Node.TEXT_NODE && cn.textContent.trim().length > 0)
-                  cn.textContent = ' Yes, I agree';
-              }
-            }
-            var contentEls = contentDiv.querySelectorAll('*');
-            for (var q = 0; q < contentEls.length; q++) {
-              var ce = contentEls[q];
-              if (ce.children.length === 0 && ce.textContent.trim() === 'SugarClock') {
-                ce.textContent = 'Installing SugarClock will erase the existing TC001 software. Check agree to proceed.';
-                ce.style.cssText = 'font-size:13px;color:#555;font-weight:normal;margin-bottom:4px;';
-              }
-            }
-            for (var m = 0; m < contentDiv.childNodes.length; m++) {
-              var node = contentDiv.childNodes[m];
-              if (node.nodeType === Node.TEXT_NODE) node.textContent = '';
-            }
-          }
-
-          // ----------------------------------------------------------
-          // INJECT WiFi FIELDS (erase page only)
-          // ----------------------------------------------------------
-          if (isErasePage) {
-            var wifiDiv = document.createElement('div');
-            wifiDiv.className = 'wifi-inject';
-            wifiDiv.style.cssText = 'margin-bottom:16px;';
-            wifiDiv.innerHTML =
-              '<p style="margin:0 0 16px;font-size:14px;color:#333;line-height:1.5;">' +
-              'Enter your home WiFi so the clock can connect after installation.</p>' +
-              '<label style="display:block;font-size:13px;color:#555;margin-bottom:4px;">WiFi Network Name</label>' +
-              '<input class="ewt-wifi-ssid" type="text" placeholder="Your 2.4 GHz network name" ' +
-              'style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:10px;box-sizing:border-box;font-family:inherit;background:#fafafa;">' +
-              '<label style="display:block;font-size:13px;color:#555;margin-bottom:4px;">WiFi Password</label>' +
-              '<div style="position:relative;">' +
-              '<input class="ewt-wifi-pass" type="password" placeholder="Password" ' +
-              'style="width:100%;padding:8px 10px;padding-right:60px;border:1px solid #ccc;border-radius:6px;font-size:14px;box-sizing:border-box;font-family:inherit;background:#fafafa;">' +
-              '<button class="ewt-pass-toggle" type="button" ' +
-              'style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#1a73e8;font-size:13px;cursor:pointer;padding:4px 6px;font-family:inherit;">' +
-              'Show</button>' +
-              '</div>' +
-              '<div style="font-size:11px;color:#888;margin-top:6px;margin-bottom:12px;">Must be a 2.4 GHz network.</div>';
-
-            contentDiv.insertBefore(wifiDiv, contentDiv.firstElementChild);
-
-            // Password show/hide toggle
-            var toggleBtn = wifiDiv.querySelector('.ewt-pass-toggle');
-            var passInput = wifiDiv.querySelector('.ewt-wifi-pass');
-            toggleBtn.addEventListener('click', function () {
-              if (passInput.type === 'password') {
-                passInput.type = 'text';
-                toggleBtn.textContent = 'Hide';
-              } else {
-                passInput.type = 'password';
-                toggleBtn.textContent = 'Show';
-              }
-            });
-
-            // Sync to hidden fields on input
-            wifiDiv.querySelector('.ewt-wifi-ssid').addEventListener('input', function () {
-              document.getElementById('wifi-ssid').value = this.value;
-            });
-            passInput.addEventListener('input', function () {
-              document.getElementById('wifi-pass').value = this.value;
-            });
-          }
-
-          // ----------------------------------------------------------
-          // PROGRESS PAGE → inject beep warning
-          // ----------------------------------------------------------
-          const progressEl = sr.querySelector('ewt-page-progress');
-          if (progressEl && progressEl.shadowRoot && !progressEl.shadowRoot.querySelector('.beep-warn')) {
-            const p = document.createElement('div');
-            p.className = 'beep-warn';
-            p.style.cssText = 'text-align:center;padding:8px 16px 0;font-size:13px;color:#666;';
-            p.textContent = 'You may hear a persistent beep during installation. This is normal.';
-            progressEl.shadowRoot.appendChild(p);
-          }
-        }, 400);
-      }).observe(document.body, { childList: true, subtree: true });
-    });
-
-    // ================================================================
-    // WiFi credential sending via Improv Serial Protocol
-    // ================================================================
-
-    function showWifiStatus(msg, type) {
-      const el = document.getElementById('wifi-status');
-      if (msg.includes('<')) {
-        el.innerHTML = msg;
-      } else {
-        el.textContent = msg;
-      }
-      el.className = 'install-wifi-status status-' + type;
-      el.style.display = 'block';
-    }
-
-    function buildImprovPacket(type, data) {
-      const header = [0x49, 0x4D, 0x50, 0x52, 0x4F, 0x56]; // "IMPROV"
-      const version = 0x01;
-      const packet = [...header, version, type, data.length, ...data];
-      let checksum = 0;
-      for (let i = 6; i < packet.length; i++) checksum = (checksum + packet[i]) & 0xFF;
-      packet.push(checksum);
-      return new Uint8Array(packet);
-    }
-
-    async function sendWifiCreds(autoMode) {
-      const ssid = document.getElementById('wifi-ssid').value.trim();
-      const pass = document.getElementById('wifi-pass').value;
-
-      if (!ssid) {
-        showWifiStatus('Please enter your WiFi network name.', 'error');
-        return;
-      }
-
-      showWifiStatus('Connecting to clock over USB...', 'progress');
-
-      let port;
-      let opened = false;
-
-      // Try to open serial port with retries (ESP Web Tools may still hold it briefly)
-      for (let attempt = 0; attempt < 3; attempt++) {
-        try {
-          if (autoMode) {
-            const ports = await navigator.serial.getPorts();
-            port = ports.length > 0 ? ports[0] : null;
-            if (!port) {
-              showWifiStatus('No serial port found. Use the manual section below to select the clock.', 'error');
-              return;
-            }
-          } else {
-            port = await navigator.serial.requestPort();
-          }
-          await port.open({ baudRate: 115200 });
-          opened = true;
-          break;
-        } catch (e) {
-          if (e.name === 'InvalidStateError' && port) {
-            try { await port.close(); } catch (_) { }
-            try {
-              await port.open({ baudRate: 115200 });
-              opened = true;
-              break;
-            } catch (_) { }
-          }
-          // Wait and retry
-          if (attempt < 2) {
-            showWifiStatus('Waiting for device to be ready... (attempt ' + (attempt + 2) + '/3)', 'progress');
-            await new Promise(r => setTimeout(r, 3000));
-          }
-        }
-      }
-
-      if (!opened) {
-        showWifiStatus('Could not connect to the clock. Make sure it is plugged in via USB, then use the section below to try again.', 'error');
-        return;
-      }
-
-      try {
-        // Build Improv RPC: CMD_WIFI_SETTINGS (0x01)
-        const ssidBytes = new TextEncoder().encode(ssid);
-        const passBytes = new TextEncoder().encode(pass);
-        const rpcData = [
-          0x01, // command: wifi_settings
-          ssidBytes.length + passBytes.length + 2,
-          ssidBytes.length, ...ssidBytes,
-          passBytes.length, ...passBytes
-        ];
-        const packet = buildImprovPacket(0x03, rpcData); // TYPE_RPC_COMMAND
-
-        showWifiStatus('Sending WiFi credentials to clock...', 'progress');
-
-        const writer = port.writable.getWriter();
-        await writer.write(packet);
-        writer.releaseLock();
-
-        showWifiStatus('Waiting for clock to connect to WiFi (up to 20s)...', 'progress');
-
-        const reader = port.readable.getReader();
-        const startTime = Date.now();
-        let buf = [];
-        let connected = false;
-        let failed = false;
-        let deviceUrl = '';
-
-        while (Date.now() - startTime < 20000 && !connected && !failed) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          if (value) {
-            for (const byte of value) buf.push(byte);
-
-            // Scan for Improv packets in buffer
-            while (buf.length >= 9) {
-              const idx = buf.findIndex((b, i) =>
-                i + 5 < buf.length &&
-                b === 0x49 && buf[i + 1] === 0x4D && buf[i + 2] === 0x50 &&
-                buf[i + 3] === 0x52 && buf[i + 4] === 0x4F && buf[i + 5] === 0x56
-              );
-              if (idx === -1) { buf = buf.slice(-6); break; }
-              if (idx > 0) buf = buf.slice(idx);
-              if (buf.length < 9) break;
-
-              const pktType = buf[7];
-              const pktLen = buf[8];
-              if (buf.length < 9 + pktLen + 1) break;
-
-              const pktData = buf.slice(9, 9 + pktLen);
-
-              // STATE_PROVISIONED (0x04)
-              if (pktType === 0x01 && pktLen >= 1 && pktData[0] === 0x04) connected = true;
-              // ERROR_UNABLE_TO_CONNECT (0x03)
-              if (pktType === 0x02 && pktLen >= 1 && pktData[0] === 0x03) failed = true;
-              // RPC_RESULT for wifi_settings — extract device URL
-              if (pktType === 0x04 && pktLen >= 2 && pktData[0] === 0x01) {
-                connected = true;
-                if (pktData.length >= 3 && pktData[1] > 0) {
-                  var urlLen = pktData[2];
-                  if (pktData.length >= 3 + urlLen) {
-                    deviceUrl = String.fromCharCode.apply(null, pktData.slice(3, 3 + urlLen));
-                  }
-                }
-              }
-
-              buf = buf.slice(9 + pktLen + 1);
-            }
-          }
-        }
-
-        reader.releaseLock();
-
-        if (connected) {
-          var msg = 'WiFi configured! The clock is restarting and connecting to your network.';
-          if (deviceUrl) {
-            msg += ' Visit <a href="' + deviceUrl + '" target="_blank" style="color:#2e7d32;font-weight:600;">' + deviceUrl + '</a> to finish setup.';
-          }
-          var el = document.getElementById('wifi-status');
-          el.innerHTML = msg;
-          el.className = 'install-wifi-status status-success';
-          el.style.display = 'block';
-        } else if (failed) {
-          showWifiStatus('Could not connect to that WiFi network. Check the name and password, then use the section below to try again.', 'error');
-        } else {
-          showWifiStatus('Timed out waiting for response. The clock may still be connecting — check if the display changes.', 'error');
-        }
-      } catch (e) {
-        showWifiStatus('Error communicating with clock: ' + e.message, 'error');
-      } finally {
-        try { await port.close(); } catch (_) { }
-      }
-    }
-  </script>
-  <script src="js/particles.js"></script>
 </body>
 
 </html>

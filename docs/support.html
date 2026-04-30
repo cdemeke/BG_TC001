@@ -4,226 +4,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation &amp; FAQ — SugarClock</title>
+  <title>Documentation &amp; FAQ - SugarClock</title>
   <meta name="description"
-    content="Get help with your SugarClock DIY CGM display. Frequently asked questions, community support, and contact information.">
+    content="SugarClock setup guide, frequently asked questions, support links, and installation help.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Space+Mono:wght@400;700&amp;display=swap"
     rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/feather-icons"></script>
-  <!-- Paste this right before your closing </head> tag -->
-  <script type="text/javascript">
-    (function (e, c) {
-      if (!c.__SV) {
-        var l, h; window.mixpanel = c; c._i = []; c.init = function (q, r, f) {
-          function t(d, a) { var g = a.split("."); 2 == g.length && (d = d[g[0]], a = g[1]); d[a] = function () { d.push([a].concat(Array.prototype.slice.call(arguments, 0))) } } var b = c; "undefined" !== typeof f ? b = c[f] = [] : f = "mixpanel"; b.people = b.people || []; b.toString = function (d) { var a = "mixpanel"; "mixpanel" !== f && (a += "." + f); d || (a += " (stub)"); return a }; b.people.toString = function () { return b.toString(1) + ".people (stub)" }; l = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
-          for (h = 0; h < l.length; h++)t(b, l[h]); var n = "set set_once union unset remove delete".split(" "); b.get_group = function () { function d(p) { a[p] = function () { b.push([g, [p].concat(Array.prototype.slice.call(arguments, 0))]) } } for (var a = {}, g = ["get_group"].concat(Array.prototype.slice.call(arguments, 0)), m = 0; m < n.length; m++)d(n[m]); return a }; c._i.push([q, r, f])
-        }; c.__SV = 1.2; var k = e.createElement("script"); k.type = "text/javascript"; k.async = !0; k.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" ===
-          e.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"; e = e.getElementsByTagName("script")[0]; e.parentNode.insertBefore(k, e)
-      }
-    })(document, window.mixpanel || [])
-
-    mixpanel.init('7ac12c6e4d00986ca1cec3580f187fe0', {
-      autocapture: true,
-      record_sessions_percent: 100,
-    })
-  </script>
 </head>
 
 <body>
-
-  <!-- ========== NAVIGATION ========== -->
   <nav class="site-nav">
     <div class="container">
-      <a href="index.html" class="nav-brand">
-        <img src="images/logo.png" alt="SugarClock" class="nav-logo">
+      <a href="index.html" class="nav-brand" aria-label="SugarClock home">
+        <img src="images/logo.png" alt="" class="nav-logo">
         <span>SugarClock</span>
       </a>
-      <button class="nav-toggle" aria-label="Open menu"
-        onclick="document.querySelector('.nav-links').classList.toggle('open')">
-        <span></span><span></span><span></span>
-      </button>
+
       <ul class="nav-links">
-        <li>
-          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
-            <i data-feather="sun" class="sun-icon"></i>
-            <i data-feather="moon" class="moon-icon"></i>
-          </button>
-        </li>
-        <li><a href="index.html#how-it-works" class="btn btn-primary btn-sm">Install Now</a></li>
+        <li><a href="index.html#why">Why</a></li>
+        <li><a href="index.html#process">Process</a></li>
+        <li><a href="support.html">Docs</a></li>
+        <li><a href="https://github.com/cdemeke/SugarClock" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
+
+      <div class="nav-actions">
+        <a href="index.html#install" class="btn btn-sm">Install Now</a>
+      </div>
     </div>
   </nav>
 
   <main>
-    <!-- ========== FAQ ========== -->
+    <section class="docs-hero">
+      <div class="container fade-up">
+        <h1>Setup Guide</h1>
+        <p>Everything you need to install SugarClock, connect a glucose source, and understand how the device should be
+          used.</p>
+      </div>
+    </section>
+
     <section class="section-py">
-      <div class="container" style="max-width: 800px;">
+      <div class="container">
+        <div class="docs-grid fade-up delay-1">
+          <article class="process-card doc-card">
+            <i data-feather="download"></i>
+            <h3>Install</h3>
+            <p>Flash SugarClock from a supported desktop browser or use the Mac setup app when Web Serial is unavailable.</p>
+          </article>
+
+          <article class="process-card doc-card">
+            <i data-feather="wifi"></i>
+            <h3>Connect</h3>
+            <p>Join your home Wi-Fi, open the local device page, and configure Dexcom Share or Nightscout.</p>
+          </article>
+
+          <article class="process-card doc-card">
+            <i data-feather="shield"></i>
+            <h3>Use Safely</h3>
+            <p>Treat SugarClock as a convenience display only. Medical decisions should use your approved CGM app or meter.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-py">
+      <div class="container narrow-container">
         <div class="section-header fade-up">
           <span class="section-label">FAQ</span>
-          <h2>Frequently Asked Questions</h2>
+          <h2>Common questions</h2>
         </div>
 
         <div class="faq-accordion fade-up delay-1">
+          <h3 class="faq-group-title">General</h3>
 
-          <!-- General -->
-          <h3 style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1.25rem;">General</h3>
-
-          <div class="faq-item clean-card">
-            <button class="faq-question">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
               <span>What exactly is SugarClock?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>SugarClock is free, open-source software that turns an inexpensive Ulanzi TC001 pixel clock (~$40) into
-                a dedicated glucose monitor display. It connects to your Dexcom CGM (or Nightscout) over WiFi and shows
-                your current glucose reading in big, colorful numbers on the clock's LED display.</p>
+              <p>SugarClock is free, open-source software that turns an inexpensive Ulanzi TC001 pixel clock into a
+                dedicated glucose monitor display. It connects to Dexcom Share or Nightscout over Wi-Fi and shows the
+                current reading on the clock's LED display.</p>
             </div>
           </div>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
               <span>Is this a medical device?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
               <p><strong>No.</strong> SugarClock is not a medical device and should not be used to make treatment
                 decisions. Always rely on your CGM receiver, CGM app, or blood glucose meter for dosing insulin or
-                making medical decisions. SugarClock is a convenience display only.</p>
+                making medical decisions.</p>
             </div>
           </div>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
               <span>Which CGMs does it work with?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>SugarClock works with <strong>Dexcom CGMs</strong> (G6, G7, ONE, etc.) through the Dexcom Share
-                feature. It also works with <strong>any CGM</strong> that sends data to a Nightscout server or similar
-                JSON API.</p>
+              <p>SugarClock works with Dexcom CGMs through Dexcom Share. It also works with CGM data sent to a
+                Nightscout server or a similar compatible JSON API.</p>
             </div>
           </div>
 
-          <!-- Setup -->
-          <h3 style="margin-top: 2.5rem; margin-bottom: 0.5rem; font-size: 1.25rem;">Installation</h3>
+          <h3 class="faq-group-title">Installation</h3>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
               <span>Do I need to know how to code?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>Not at all! Everything is done through your web browser. You click one button to install the
-                software, enter your Wi-Fi name and password when prompted, and you're done. After that, all
-                settings are managed through a simple web page on the clock itself.</p>
+              <p>No. The browser installer flashes the firmware, and the clock's local settings page handles the rest.
+                You only need the clock, a USB-C data cable, Wi-Fi details, and your CGM source information.</p>
             </div>
           </div>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
-              <span>What if I mess something up during setup?</span>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>What if setup fails?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>Don't worry! You can always start over. If something goes wrong during installation, just click
-                the Install button again. The worst that can happen is the clock shows a blank screen &mdash; in
-                which case you simply re-install.</p>
+              <p>You can run the installer again. If the display is blank or the clock does not connect, reconnect the
+                USB cable, select the device again, and re-flash SugarClock.</p>
             </div>
           </div>
 
-          <div class="faq-item clean-card" id="factory-restore">
-            <button class="faq-question">
-              <span>Can I go back to the original clock software?</span>
+          <div class="faq-item" id="factory-restore">
+            <button class="faq-question" type="button">
+              <span>Can I restore the original clock software?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>Yes! If you backed up the factory firmware before flashing SugarClock, you can restore it using
-                the same web flasher or the ESPTool utility. The Ulanzi community also shares factory firmware
-                images that you can re-flash at any time.</p>
+              <p>Yes, if you backed up the factory firmware before flashing SugarClock. You can restore it with the same
+                flashing tools. The Ulanzi community also shares factory firmware images.</p>
             </div>
           </div>
 
-          <!-- Tech -->
-          <h3 style="margin-top: 2.5rem; margin-bottom: 0.5rem; font-size: 1.25rem;">Technical &amp; Usage</h3>
+          <h3 class="faq-group-title">Technical</h3>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
               <span>Does it have a battery?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>The Ulanzi TC001 has a small internal battery, but it's not designed for extended battery operation
-                with WiFi active and the LEDs lit. Keep it plugged into USB power at all times. Think of it as a plug-in
-                desk clock.</p>
+              <p>The Ulanzi TC001 has a small internal battery, but it is not designed for extended Wi-Fi and LED use.
+                Keep it plugged into USB power for normal SugarClock operation.</p>
             </div>
           </div>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
-              <span>Is my glucose data private and secure?</span>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>Is my glucose data private?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>Your glucose data flows directly from your data source to the clock over HTTPS (encrypted). The clock
-                does not send your data to any third-party servers. Your Dexcom credentials and WiFi password are stored
-                locally on the clock's internal memory and never leave your network.</p>
+              <p>Your glucose data flows from your configured data source to the clock. SugarClock stores settings
+                locally on the device and does not require a SugarClock cloud account.</p>
             </div>
           </div>
 
-          <div class="faq-item clean-card">
-            <button class="faq-question">
-              <span>How do I find the clock's IP address after setup?</span>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              <span>How do I find the clock's IP address?</span>
               <i data-feather="chevron-down"></i>
             </button>
             <div class="faq-answer">
-              <p>The easiest way: the clock scrolls its IP address on the LED display when it first connects
-                (e.g. "Visit 192.168.1.42 to setup"). You can also check your Wi-Fi router's connected devices
-                page, or use a free network scanner app like "Fing" on your phone.</p>
+              <p>The clock scrolls its IP address on the LED display when it connects. You can also check your router's
+                connected devices page or use a network scanner app on your phone.</p>
             </div>
           </div>
-
         </div>
       </div>
     </section>
-
   </main>
 
-  <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand-col">
           <a href="index.html" class="nav-brand">
-            <img src="images/logo.png" alt="SugarClock" class="nav-logo gray icon-sm">
-            <span class="text-dark">SugarClock</span>
+            <img src="images/logo.png" alt="" class="nav-logo">
+            <span>SugarClock</span>
           </a>
-          <p class="footer-desc mt-3">An open-source DIY project aimed at making glucose data more visible and
-            accessible.</p>
+          <p class="mt-3">An open-source DIY project for making glucose data more visible and accessible.</p>
         </div>
         <div class="footer-links">
-          <h4>Help</h4>
+          <h4>Links</h4>
           <ul>
-            <li><a href="support.html">FAQ</a></li>
+            <li><a href="index.html#install">Install</a></li>
             <li><a href="https://github.com/cdemeke/SugarClock/issues" target="_blank" rel="noopener">Issue Tracker</a></li>
+            <li><a href="https://github.com/cdemeke/SugarClock" target="_blank" rel="noopener">Source Code</a></li>
           </ul>
         </div>
         <div class="footer-links">
           <h4>Project</h4>
-          <ul>
-            <li><a href="https://github.com/cdemeke/SugarClock" target="_blank" rel="noopener">Source Code</a></li>
-          </ul>
+          <p>Released under the MIT License by SugarClock contributors.</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 SugarClock Contributors. Released under the MIT License.</p>
-        <p class="disclaimer mt-2"><strong>Disclaimer:</strong> SugarClock is not a medical device. Do not use its
-          display for making medical decisions. Always consult your primary CGM receiver/app.</p>
+        <p>&copy; 2026 SugarClock Contributors. All rights reserved.</p>
+        <p class="disclaimer mt-2">SugarClock is not a medical device. Do not use its display for making medical
+          decisions.</p>
       </div>
     </div>
   </footer>
@@ -231,43 +225,24 @@
   <script>
     feather.replace();
 
-    // Theme toggling logic
-    (function() {
-      const themeToggle = document.getElementById('theme-toggle');
-      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-      function getThemeSafe() { try { return localStorage.getItem('theme'); } catch (e) { return null; } }
-      function setThemeSafe(t) { try { localStorage.setItem('theme', t); } catch (e) {} }
-      function applyTheme(t) { if (t === 'dark') { document.body.classList.add('dark-theme'); } else { document.body.classList.remove('dark-theme'); } setThemeSafe(t); }
-      var saved = getThemeSafe();
-      if (saved) { applyTheme(saved); } else { applyTheme(prefersDarkScheme.matches ? 'dark' : 'light'); }
-      prefersDarkScheme.addEventListener('change', function(e) { if (!getThemeSafe()) applyTheme(e.matches ? 'dark' : 'light'); });
-      if (themeToggle) themeToggle.addEventListener('click', function() { applyTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark'); });
-    })();
-
     document.addEventListener("DOMContentLoaded", () => {
-      // Intersection Observer for scroll animations
       const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
+            entry.target.classList.add("is-visible");
             obs.unobserve(entry.target);
           }
         });
       }, { threshold: 0.1 });
 
-      document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+      document.querySelectorAll(".fade-up").forEach(el => observer.observe(el));
 
-      // FAQ Accordion
-      document.querySelectorAll('.faq-question').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const item = btn.closest('.faq-item');
-          item.classList.toggle('active');
-          const answer = item.querySelector('.faq-answer');
-          if (item.classList.contains('active')) {
-            answer.style.maxHeight = answer.scrollHeight + "px";
-          } else {
-            answer.style.maxHeight = 0;
-          }
+      document.querySelectorAll(".faq-question").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = btn.closest(".faq-item");
+          item.classList.toggle("active");
+          const answer = item.querySelector(".faq-answer");
+          answer.style.maxHeight = item.classList.contains("active") ? answer.scrollHeight + "px" : 0;
         });
       });
     });
