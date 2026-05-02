@@ -11,10 +11,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Space+Mono:wght@400;700&amp;display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Lilita+One&amp;display=swap"
     rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" href="favicon.ico">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fff7cc">
   <script src="https://unpkg.com/feather-icons"></script>
 </head>
 
@@ -52,21 +58,21 @@
       <div class="container">
         <div class="docs-grid fade-up delay-1">
           <article class="process-card doc-card">
+            <i data-feather="shopping-bag"></i>
+            <h3>Buy the Clock</h3>
+            <p>Start with a compatible Ulanzi TC001 smart pixel clock, then install SugarClock when it arrives.</p>
+          </article>
+
+          <article class="process-card doc-card">
             <i data-feather="download"></i>
             <h3>Install</h3>
-            <p>Flash SugarClock from a supported desktop browser or use the Mac setup app when Web Serial is unavailable.</p>
+            <p>Use the browser installer or Mac setup app to put SugarClock on the clock.</p>
           </article>
 
           <article class="process-card doc-card">
             <i data-feather="wifi"></i>
             <h3>Connect</h3>
             <p>Join your home Wi-Fi, open the local device page, and configure Dexcom Share or Nightscout.</p>
-          </article>
-
-          <article class="process-card doc-card">
-            <i data-feather="shield"></i>
-            <h3>Use Safely</h3>
-            <p>Treat SugarClock as a convenience display only. Medical decisions should use your approved CGM app or meter.</p>
           </article>
         </div>
       </div>
@@ -172,7 +178,7 @@
             </button>
             <div class="faq-answer">
               <p>Your glucose data flows from your configured data source to the clock. SugarClock stores settings
-                locally on the device and does not require a SugarClock cloud account.</p>
+                locally on the device.</p>
             </div>
           </div>
 
@@ -216,8 +222,6 @@
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 SugarClock Contributors. All rights reserved.</p>
-        <p class="disclaimer mt-2">SugarClock is not a medical device. Do not use its display for making medical
-          decisions.</p>
       </div>
     </div>
   </footer>

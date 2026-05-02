@@ -4,17 +4,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SugarClock - An Open Source CGM Display</title>
+  <title>SugarClock - Glucose Visible at a Glance</title>
   <meta name="description"
-    content="SugarClock turns an affordable Ulanzi TC001 smart pixel clock into an open source, color-coded CGM display.">
+    content="SugarClock turns an affordable Ulanzi TC001 smart pixel clock into an open source CGM display for people with diabetes and families.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Space+Mono:wght@400;700&amp;display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Lilita+One&amp;display=swap"
     rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" href="favicon.ico">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fff7cc">
   <script src="https://unpkg.com/feather-icons"></script>
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
 </head>
@@ -45,26 +51,42 @@
       <div class="container">
         <div class="masthead fade-up">
           <img src="images/logo.png" alt="SugarClock display showing a glucose trend" class="brand-mark">
-          <h1 class="brand-title">SugarClock</h1>
+          <div class="brand-lockup">
+            <h1 class="brand-title">SugarClock</h1>
+            <p class="masthead-tagline">A glanceable CGM display for desks, nightstands, and shared family spaces.</p>
+          </div>
         </div>
 
         <div class="hero-grid">
           <div class="hero-copy fade-up delay-1">
-            <h2>A blood sugar monitor shouldn't cost a fortune.</h2>
-            <p class="hero-kicker">A simple, open source CGM display for your desk or nightstand.</p>
-            <p>SugarClock converts a low-cost Ulanzi TC001 smart pixel clock into a dedicated glucose display for
-              Dexcom Share or Nightscout data. Big numbers, clear trend arrows, and no proprietary subscription wall.</p>
+            <p>SugarClock turns a low-cost Ulanzi TC001 smart pixel clock into an open-source display for people with
+              diabetes and families who want glucose numbers visible without opening a phone.</p>
+
+            <ul class="reassurance-list">
+              <li><i data-feather="check" aria-hidden="true"></i>No coding required</li>
+              <li><i data-feather="check" aria-hidden="true"></i>Runs locally</li>
+              <li><i data-feather="check" aria-hidden="true"></i>Works with Nightscout / Dexcom Share</li>
+              <li><i data-feather="check" aria-hidden="true"></i>No subscription</li>
+            </ul>
 
             <div class="hero-actions">
-              <span class="stat-pill">~$40 hardware</span>
-              <a href="#install" class="btn">Install Now</a>
-              <a href="support.html" class="btn btn-secondary">Setup Guide</a>
+              <a href="#install" class="btn btn-primary">Install Now</a>
+              <a href="https://github.com/cdemeke/SugarClock" class="btn btn-secondary" target="_blank"
+                rel="noopener">View GitHub</a>
             </div>
+
+            <p class="trust-note">Built on about <strong>$40 hardware</strong>, open source, and designed as a
+              convenience display for your home.</p>
           </div>
 
-          <div class="hero-photo-wrap fade-up delay-2">
-            <img src="images/hero.png" alt="SugarClock showing a glucose reading on a pixel clock" class="hero-photo">
-          </div>
+          <figure class="hero-photo-wrap fade-up delay-2">
+            <div class="youtube-placeholder" role="img"
+              aria-label="Placeholder for a YouTube video showing SugarClock in use">
+              <div class="youtube-play" aria-hidden="true"></div>
+              <span>YouTube video placeholder</span>
+            </div>
+            <figcaption>A dedicated display for the number you check all day.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -73,8 +95,8 @@
       <div class="container">
         <div class="section-header fade-up">
           <h2>Why build it yourself?</h2>
-          <p class="section-desc">The goal is not another app. It is a glanceable display that makes CGM data easier to
-            see across a room without buying an expensive dedicated monitor.</p>
+          <p class="section-desc"><strong>Most CGM displays are expensive, locked down, or hard to customize.</strong>
+            SugarClock is different: it is affordable, open, and made for everyday visibility.</p>
         </div>
 
         <div class="comparison-shell fade-up delay-1">
@@ -88,23 +110,23 @@
             <tbody>
               <tr>
                 <td>$100-$200+ displays <span class="detail">Dedicated devices can be expensive or hard to customize.</span></td>
-                <td class="highlight-col">~$40 hardware <span class="detail">Built around the Ulanzi TC001 smart clock.</span></td>
+                <td class="highlight-col"><strong>~$40 hardware</strong> <span class="detail">Built around the Ulanzi TC001 smart clock.</span> <a href="#buy-clock" class="table-link">Where to buy</a></td>
               </tr>
               <tr>
                 <td>Closed software <span class="detail">Limited visibility into how data is fetched or shown.</span></td>
-                <td class="highlight-col">Open source <span class="detail">MIT licensed firmware and web UI.</span></td>
+                <td class="highlight-col"><strong>Open source</strong> <span class="detail">MIT licensed firmware and web UI.</span></td>
               </tr>
               <tr>
                 <td>Configuration friction <span class="detail">Often requires vendor accounts or hidden settings.</span></td>
-                <td class="highlight-col">Browser setup <span class="detail">Install from the web and configure locally.</span></td>
+                <td class="highlight-col"><strong>Browser setup</strong> <span class="detail">Install from the web and configure locally.</span></td>
               </tr>
               <tr>
                 <td>Narrow integrations <span class="detail">Support can be tied to one ecosystem.</span></td>
-                <td class="highlight-col">Dexcom + Nightscout <span class="detail">Use Dexcom Share or any compatible JSON API.</span></td>
+                <td class="highlight-col"><strong>Dexcom + Nightscout</strong> <span class="detail">Use Dexcom Share or any compatible JSON API.</span></td>
               </tr>
               <tr>
                 <td>Hard to inspect <span class="detail">You cannot always see what runs on the device.</span></td>
-                <td class="highlight-col">Hackable <span class="detail"><a href="https://github.com/cdemeke/SugarClock"
+                <td class="highlight-col"><strong>Hackable</strong> <span class="detail"><a href="https://github.com/cdemeke/SugarClock"
                     target="_blank" rel="noopener">Read the source</a> and make it yours.</span></td>
               </tr>
             </tbody>
@@ -118,43 +140,52 @@
         <div class="section-header fade-up">
           <span class="section-label">Process</span>
           <h2>From clock to CGM display</h2>
+          <p class="section-desc">Setup takes about 5 minutes and does not require coding.</p>
         </div>
 
         <div class="process-grid fade-up delay-1">
-          <article class="process-card">
+          <article class="process-card" id="buy-clock">
             <i data-feather="shopping-bag"></i>
-            <h3>Step 1: Start</h3>
-            <p>Pick up an Ulanzi TC001 smart pixel clock and plug it into your computer with a USB-C data cable.</p>
+            <h3>Pick up a compatible clock</h3>
+            <p>Start with the affordable Ulanzi TC001 smart pixel clock.</p>
+            <div class="buy-links">
+              <span>Buy from</span>
+              <a href="https://www.amazon.com/ULANZI-TC001-Smart-Pixel-Clock/dp/B0CXX91TY5" target="_blank"
+                rel="noopener">Amazon.com</a>
+              <a href="https://www.ulanzi.com/products/ulanzi-pixel-smart-clock-2882" target="_blank"
+                rel="noopener">Ulanzi</a>
+            </div>
+          </article>
+
+          <article class="process-card">
+            <i data-feather="hard-drive"></i>
+            <h3>Plug it into your computer</h3>
+            <p>Use a USB-C data cable so your browser can see the clock.</p>
           </article>
 
           <article class="process-card">
             <i data-feather="download-cloud"></i>
-            <h3>Step 2: Install</h3>
-            <p>Use the browser installer to flash SugarClock firmware and prepare the clock for your Wi-Fi network.</p>
-          </article>
-
-          <article class="process-card">
-            <i data-feather="wifi"></i>
-            <h3>Step 3: Connect</h3>
-            <p>Open the clock's local settings page and add your Dexcom Share or Nightscout configuration.</p>
+            <h3>Install SugarClock directly from your browser</h3>
+            <p>Click Install and follow the guided prompts. No terminal or coding.</p>
+            <a href="#install" class="card-link">Go to install</a>
           </article>
 
           <article class="process-card">
             <i data-feather="activity"></i>
-            <h3>Feature Cards</h3>
-            <p>Readable glucose values, trend arrows, color-coded ranges, and display modes for different rooms.</p>
+            <h3>Connect your CGM data</h3>
+            <p>Add Dexcom Share or Nightscout details on the clock's local setup page.</p>
           </article>
 
           <article class="process-card">
             <i data-feather="sliders"></i>
-            <h3>Configuration</h3>
-            <p>Adjust glucose source, units, brightness, alerts, timers, weather, and other device settings locally.</p>
+            <h3>Choose your display settings</h3>
+            <p>Set units, brightness, ranges, and the display style that works for your space.</p>
           </article>
 
           <article class="process-card">
-            <i data-feather="award"></i>
-            <h3>User Fit</h3>
-            <p>Designed as a convenience display for caregivers, desks, nightstands, and shared household spaces.</p>
+            <i data-feather="home"></i>
+            <h3>Put it where your family can see it</h3>
+            <p>Place it on a desk, nightstand, kitchen counter, or caregiver station.</p>
           </article>
         </div>
       </div>
@@ -164,9 +195,9 @@
       <div class="container">
         <div class="section-header fade-up">
           <span class="section-label">Install</span>
-          <h2>Ready to see your numbers clearly?</h2>
-          <p class="section-desc">Installation runs in your browser on Chrome or Edge desktop. The Mac setup app is
-            available when your browser does not support direct USB installation.</p>
+          <h2>You're a few minutes away from a working display.</h2>
+          <p class="section-desc">Use Chrome or Edge on a computer. SugarClock guides you through each step,
+            and the Mac setup app is available when browser installation is not supported.</p>
         </div>
 
         <div id="mac-app-card" class="install-panel clean-card install-flash-card hidden-initial fade-up delay-1">
@@ -177,14 +208,15 @@
               </div>
               <div>
                 <h2>Install with the Mac App</h2>
-                <p class="text-muted text-sm">Your browser does not support direct USB installation.</p>
+                <p class="text-muted text-sm">Your browser does not support direct USB installation, so the app walks
+                  you through the same setup.</p>
               </div>
             </div>
 
             <ol class="install-prereq-list">
-              <li>Download and open the SugarClock Setup app on your Mac.</li>
-              <li>Plug the Ulanzi TC001 into your Mac with a USB-C data cable.</li>
-              <li>Follow the guided setup flow.</li>
+              <li><strong>Download and open</strong> the SugarClock Setup app on your Mac.</li>
+              <li><strong>Plug in the clock</strong> with a USB-C data cable.</li>
+              <li><strong>Follow the prompts</strong> to install SugarClock and connect Wi-Fi.</li>
             </ol>
 
             <div class="install-button-wrap">
@@ -205,21 +237,24 @@
               </div>
               <div>
                 <h2>Install SugarClock</h2>
-                <p class="text-muted text-sm">SugarClock v0.1.0 - ESP32 - Build 28</p>
+                <p class="text-muted text-sm">Browser-based setup for the Ulanzi TC001 smart pixel clock.</p>
               </div>
             </div>
 
+            <p class="install-prereq-note">These steps assume you already have a <a href="#buy-clock">Ulanzi TC001
+                smart pixel clock</a>. Need one first? Use the buying links above.</p>
+
             <ol class="install-prereq-list">
-              <li>Plug the Ulanzi TC001 into your computer with a USB-C data cable.</li>
-              <li>Click Install and choose the clock when your browser asks for a serial device.</li>
-              <li>After flashing, follow the display prompt to finish local setup.</li>
+              <li><strong>Plug in the clock</strong> with a USB-C data cable.</li>
+              <li><strong>Click Install</strong> and choose the clock when your browser asks.</li>
+              <li><strong>Finish setup locally</strong> by following the prompt on the display.</li>
             </ol>
 
             <div class="callout callout-info">
               <div class="callout-icon"><i data-feather="volume-2"></i></div>
               <div class="callout-text">
-                <strong>You may hear beeping during installation.</strong> This is normal and stops once installation
-                completes.
+                <strong>You may hear beeping during installation.</strong> That is expected while the clock updates,
+                and it stops when setup is complete.
               </div>
             </div>
 
@@ -242,11 +277,11 @@
 
     <section class="cta-band">
       <div class="container fade-up">
-        <h2>Make your CGM data visible.</h2>
-        <p>Build a low-cost display you can understand at a glance, then tune it to fit your home, desk, or nightstand.</p>
+        <h2>Make your glucose visible.</h2>
+        <p>Give yourself and your family a dedicated display for the number you check all day.</p>
         <div class="cta-actions">
-          <a href="#install" class="btn">Install Now</a>
-          <a href="support.html" class="btn btn-secondary">Setup Guide</a>
+          <a href="#install" class="btn btn-primary">Install SugarClock</a>
+          <a href="support.html" class="btn btn-secondary">Read Setup Guide</a>
         </div>
       </div>
     </section>
